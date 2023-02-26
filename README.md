@@ -105,24 +105,24 @@ This is an example of how to list things you need to use the software and how to
 ### Installation on Mac
 1. Clone the repo
 ```sh
-   git clone https://github.com/takamantan/2206-Project.git
+  git clone https://github.com/takamantan/2206-Project.git
 ```
    
 1. Activate Miniconda virtual environment for Mac M1 Devices
 ```sh
-cd 2206-Project
-bash trainer/m1MiniConda.sh -b -p $HOME/miniconda
-source ~/miniconda/bin/activate
+  cd 2206-Project
+  bash trainer/m1MiniConda.sh -b -p $HOME/miniconda
+  source ~/miniconda/bin/activate
 ```
 
 2. Install Tensorflow Dependencies, Version Number must line up. 
 e.g `tensorflow-deps==2.10.0,tensorflow-macos==2.10.0`
 
 ```sh
-conda install -c apple tensorflow-deps
-pip install --force-reinstall -v "tensorflow-macos==2.10.0"
-pip install --force-reinstall -v "tensorflow-metal==0.6.0"
-pip install -U scikit-learn scipy matplotlib pandas
+  conda install -c apple tensorflow-deps
+  pip install --force-reinstall -v "tensorflow-macos==2.10.0"
+  pip install --force-reinstall -v "tensorflow-metal==0.6.0"
+  pip install -U scikit-learn scipy matplotlib pandas
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
