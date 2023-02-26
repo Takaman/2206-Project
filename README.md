@@ -110,19 +110,19 @@ This is an example of how to list things you need to use the software and how to
    
 1. Activate Miniconda virtual environment for Mac M1 Devices
 ```sh
-	cd 2206-Project
-	bash trainer/m1MiniConda.sh -b -p $HOME/miniconda
-	source ~/miniconda/bin/activate
+cd 2206-Project
+bash trainer/m1MiniConda.sh -b -p $HOME/miniconda
+source ~/miniconda/bin/activate
 ```
 
 2. Install Tensorflow Dependencies, Version Number must line up. 
 e.g `tensorflow-deps==2.10.0,tensorflow-macos==2.10.0`
 
 ```sh
-	conda install -c apple tensorflow-deps
-	pip install --force-reinstall -v "tensorflow-macos==2.10.0"
-	pip install --force-reinstall -v "tensorflow-metal==0.6.0"
-	pip install -U scikit-learn scipy matplotlib pandas
+conda install -c apple tensorflow-deps
+pip install --force-reinstall -v "tensorflow-macos==2.10.0"
+pip install --force-reinstall -v "tensorflow-metal==0.6.0"
+pip install -U scikit-learn scipy matplotlib pandas
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -158,7 +158,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 [issues-shield]: https://img.shields.io/github/issues/takamantan/2206-Project.svg?style=for-the-badge
 [issues-url]: https://github.com/takamantan/2206-Project/issues
 [license-shield]: https://img.shields.io/github/license/takamantan/2206-Project.svg?style=for-the-badge
-[license-url]: https://github.com/takamantan/2206-Project/blob/master/LICENSE.txt
+[license-url]: https://github.com/takamantan/2206-Project/blob/master/LICENSE.md
 [product-screenshot]: images/screenshot.png
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
