@@ -27,46 +27,27 @@ function labelRating(ratingText) {
   return "neutral";
 }
 
+// Function to check the current URL using the Chrome API
+function getCurrentUrl(callback) {
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    const url = tabs[0].url;
+    callback(url);
+  });
+}
 // Handle the form submission
 function handleFormSubmit(event) {
+  let selectedText = "";
     console.log("Form submitted");
     event.preventDefault();
-    // const query = document.getElementById("query").value;
-    
-    // Get the current tweet text. DOM is hard to get. I used api instead i guess
-    //const tweetText = document.querySelector("div[data-testid='tweet'] span").textContent;
-    const tweetUrl = window.location.href;
-    const tweetId = tweetUrl.substr(tweetUrl.lastIndexOf("/") + 1);
-    console.log(tweetId);
-
-    // To be DONE
-    const Token = "";
-    const options = {
-      headers: {
-        Authorization: `Bearer ${Token}`
-      },
-    };
-
-    // Get the tweet text using the Twitter API
-    // Need to fix this and add our access token. Currently will get 403 forbidden error
-
-    fetch(`https://twitter.com/i/api/2/timeline/conversation/${tweetId}.json`, options)
-      .then(response => response.json())
-      .then(data => {
-        // Get the tweet text from the response
-        const tweetText = data.globalObjects.tweets[tweetId].full_text;
-        // Call the fact check function
-        factCheck(tweetText);
-      })
-      .catch(error => {
-        const resultDiv = document.getElementById("result");
-        resultDiv.innerHTML = "<p>Error: Unable to fetch data from the Twitter API</p>";
-        console.error(error);
-      });
-  
-
-    // Encode the query for use in the URL
-    const query = encodeURIComponent(tweetText);
+    // Get the selected text from the current tab
+    chrome.tabs.executeScript( {
+      code: "window.getSelection().toString();"
+  }, function(selection) {
+      selectedText = selection[0];   
+      
+      // Encode the query for use in the URL
+    console.log(selectedText);
+    const query = encodeURIComponent(selectedText);
     // Define the API key and URL put in the API key and the query
     const apiKey = "AIzaSyAvMF2h0dGexw34zHgDz3rWob2FTYAC8tE";
     const urlTemplate = `https://factchecktools.googleapis.com/v1alpha1/claims:search?query=${query}&key=${apiKey}`;
@@ -127,12 +108,16 @@ function handleFormSubmit(event) {
         resultDiv.innerHTML = "<p>Error: Unable to fetch data from the Google Fact Check API</p>";
         console.error(error);
       });
-  }
-  
+  });
+
+ 
+  } 
+
   // Add event listener 
   document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("check_tweet_button");
     form.addEventListener("submit", handleFormSubmit);
   });
+
   
   
