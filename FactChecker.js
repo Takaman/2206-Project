@@ -120,14 +120,46 @@ function handleFormSubmit(event) {
           resultDiv.innerHTML += "<p>This sentence or speech is likely true or mostly true</p>";
         }
       })
+      // If the API does not have any data, try searching Google for news articles
       .catch(error => {
-        const resultDiv = document.getElementById("result");
-        console.log("API does not have any data. Trying Other methods. Searching of Google?")
+
+        console.log("API does not have any data. Trying Other methods. Searching of Google")
+        searchNewsAPI(selectedText);
       });
   });
 
 
 }
+
+function searchNewsAPI(query) {
+    const newsAPIKey = "307ec301188c402080a825919ece8621";
+    const urlTemplate2 = 'https://newsapi.org/v2/everything?q=' + query + '&apiKey=' + newsAPIKey + '&language=en&sortBy=publishedAt&pageSize=100';
+
+    fetch(urlTemplate2)
+        .then(response => response.json())
+        .then(data => {
+            const items = data.articles;
+            const resultDiv = document.getElementById("result");
+
+            if (items.length === 0) {
+                resultDiv.innerHTML += "<p>No Results from Google news sources</p>";
+                return;
+            }
+
+            let resultHtml = "<p>Search results from Google news sources</p><ul>";
+            // Display search results
+            items.forEach(item => {
+                resultHtml += `<li><a href="${item.url}" target="_blank">${item.title}</a></li>`;
+            });
+
+            resultHtml += "</ul>";
+            resultDiv.innerHTML = resultHtml;
+        })
+        .catch(error => {
+            console.log("No results from Google news sources");
+        });
+}
+
 
 // Add event listener 
 document.addEventListener("DOMContentLoaded", function () {
