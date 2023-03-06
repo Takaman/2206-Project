@@ -1,4 +1,3 @@
-const natural = require('natural');
 
 //keywords might need to built more as fact checking websites have different ways of rating. Like four pinnochios means fake etc
 //Define keywords for false or misleading claims. Tried my best to include all the keywords
