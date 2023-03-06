@@ -50,18 +50,20 @@ function getCurrentUrl(callback) {
     callback(url);
   });
 }
+
+
 // Handle the form submission
 function handleFormSubmit(event) {
   let selectedText = "";
 
   console.log("Form submitted");
   event.preventDefault();
-  // Get the selected text from the current tab
-  chrome.tabs.executeScript({
-    code: "window.getSelection().toString();"
-  }, function (selection) {
-    selectedText = selection[0];
-
+  //Send message to content script to get the selected text
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, { action: "getSelection", allFrames: true }, function (response) {
+      selectedText = response.selection;
+  
+    // Get the selected text from the form
     // Encode the query for use in the URL
     console.log(selectedText);
     const query = encodeURIComponent(selectedText);
@@ -127,6 +129,7 @@ function handleFormSubmit(event) {
         searchNewsAPI(selectedText);
       });
   });
+  });
 
 
 }
@@ -150,6 +153,19 @@ function searchNewsAPI(query) {
             // Display search results
             items.forEach(item => {
                 resultHtml += `<li><a href="${item.url}" target="_blank">${item.title}</a></li>`;
+                fetch(item.url)
+                .then(response => response.text())
+                .then(html => {
+                  //Process article content with NLP
+                  const articletext= new DOMParser().parseFromString(html, "text/html").documentElement.textContent;
+                  const tokenizer = new natural.WordTokenizer();
+                  const tokens = tokenizer.tokenize(articletext);
+                  console.log(tokens);
+                })
+                .catch(error => {
+                    console.log(error);
+                    console.log("Google link broken");
+                });
             });
 
             resultHtml += "</ul>";
