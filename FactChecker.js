@@ -1,3 +1,5 @@
+import * as tf from '@tensorflow/tfjs';
+
 const natural = require('natural');
 
 //keywords might need to built more as fact checking websites have different ways of rating. Like four pinnochios means fake etc

@@ -1,3 +1,4 @@
+import * as tf from '@tensorflow/tfjs';
 
 //keywords might need to built more as fact checking websites have different ways of rating. Like four pinnochios means fake etc
 //Define keywords for false or misleading claims. Tried my best to include all the keywords
@@ -62,118 +63,134 @@ function handleFormSubmit(event) {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     chrome.tabs.sendMessage(tabs[0].id, { action: "getSelection", allFrames: true }, function (response) {
       selectedText = response.selection;
-  
-    // Get the selected text from the form
-    // Encode the query for use in the URL
-    console.log(selectedText);
-    const query = encodeURIComponent(selectedText);
-    // Define the API key and URL put in the API key and the query
-    const apiKey = "AIzaSyAvMF2h0dGexw34zHgDz3rWob2FTYAC8tE";
-    const urlTemplate = `https://factchecktools.googleapis.com/v1alpha1/claims:search?query=${query}&key=${apiKey}`;
 
-    // Send a request to the Google Fact Check API
-    fetch(urlTemplate)
-      .then(response => response.json())
-      .then(data => {
-        // Initialize counters for true, false, and neutral responses for this query term
-        let queryTrueCount = 0;
-        let queryFalseCount = 0;
-        let queryNeutralCount = 0;
+      // Get the selected text from the form
+      // Encode the query for use in the URL
+      console.log(selectedText);
+      const query = encodeURIComponent(selectedText);
+      // Define the API key and URL put in the API key and the query
+      const apiKey = "AIzaSyAvMF2h0dGexw34zHgDz3rWob2FTYAC8tE";
+      const urlTemplate = `https://factchecktools.googleapis.com/v1alpha1/claims:search?query=${query}&key=${apiKey}`;
 
-        // Loop through each fact check result
-        for (let claim of data.claims) {
-          const ratingText = claim.claimReview[0].textualRating;
+      // Send a request to the Google Fact Check API
+      fetch(urlTemplate)
+        .then(response => response.json())
+        .then(data => {
+          // Initialize counters for true, false, and neutral responses for this query term
+          let queryTrueCount = 0;
+          let queryFalseCount = 0;
+          let queryNeutralCount = 0;
 
-          // Map the rating text to a label
-          const label = labelRating(ratingText);
+          // Loop through each fact check result
+          for (let claim of data.claims) {
+            const ratingText = claim.claimReview[0].textualRating;
 
-          if (label === "true") {
-            queryTrueCount++;
-          } else if (label === "false") {
-            queryFalseCount++;
-          } else {
-            queryNeutralCount++;
+            // Map the rating text to a label
+            const label = labelRating(ratingText);
+
+            if (label === "true") {
+              queryTrueCount++;
+            } else if (label === "false") {
+              queryFalseCount++;
+            } else {
+              queryNeutralCount++;
+            }
           }
-        }
 
-        // Compute the weighted score for this query term
-        const totalCount = queryTrueCount + queryFalseCount + queryNeutralCount;
-        const queryWeightedScore = totalCount > 0 ? (queryTrueCount - queryFalseCount) / totalCount : 0;
+          // Compute the weighted score for this query term
+          const totalCount = queryTrueCount + queryFalseCount + queryNeutralCount;
+          const queryWeightedScore = totalCount > 0 ? (queryTrueCount - queryFalseCount) / totalCount : 0;
 
-        // Display the results for this query term
-        const resultDiv = document.getElementById("result");
-        resultDiv.innerHTML = `<p>True: ${queryTrueCount}</p>
+          // Display the results for this query term
+          const resultDiv = document.getElementById("result");
+          resultDiv.innerHTML = `<p>True: ${queryTrueCount}</p>
                                <p>False: ${queryFalseCount}</p>
                                <p>Neutral: ${queryNeutralCount}</p>
                                <p>Weighted score: ${queryWeightedScore}</p>`;
 
-        if (totalCount < 3) {
-          resultDiv.innerHTML += "<p>Not enough results to make a determination</p>";
-          return;
-        }
+          if (totalCount < 3) {
+            resultDiv.innerHTML += "<p>Not enough results to make a determination</p>";
+            return;
+          }
 
-        if (queryWeightedScore < -0.5) {
-          resultDiv.innerHTML += "<p>This sentence or speech is likely false</p>";
-        } else if (queryWeightedScore > -0.5 && queryWeightedScore < 0) {
-          resultDiv.innerHTML += "<p>This sentence or speech has false or misleading claims</p>";
-        } else if (queryWeightedScore > 0 && queryWeightedScore < 0.5) {
-          resultDiv.innerHTML += "<p>This sentence or speech has some true and some false or misleading claims</p>";
-        } else {
-          resultDiv.innerHTML += "<p>This sentence or speech is likely true or mostly true</p>";
-        }
-      })
-      // If the API does not have any data, try searching Google for news articles
-      .catch(error => {
+          if (queryWeightedScore < -0.5) {
+            resultDiv.innerHTML += "<p>This sentence or speech is likely false</p>";
+          } else if (queryWeightedScore > -0.5 && queryWeightedScore < 0) {
+            resultDiv.innerHTML += "<p>This sentence or speech has false or misleading claims</p>";
+          } else if (queryWeightedScore > 0 && queryWeightedScore < 0.5) {
+            resultDiv.innerHTML += "<p>This sentence or speech has some true and some false or misleading claims</p>";
+          } else {
+            resultDiv.innerHTML += "<p>This sentence or speech is likely true or mostly true</p>";
+          }
+        })
+        // If the API does not have any data, try searching Google for news articles
+        .catch(error => {
 
-        console.log("API does not have any data. Trying Other methods. Searching of Google")
-        searchNewsAPI(selectedText);
-      });
-  });
+          console.log("API does not have any data. Trying Other methods. Searching of Google")
+          searchNewsAPI(selectedText);
+        });
+    });
   });
 
 
 }
 
 function searchNewsAPI(query) {
-    const newsAPIKey = "307ec301188c402080a825919ece8621";
-    const urlTemplate2 = 'https://newsapi.org/v2/everything?q=' + query + '&apiKey=' + newsAPIKey + '&language=en&sortBy=publishedAt&pageSize=100';
+  const newsAPIKey = "307ec301188c402080a825919ece8621";
+  const urlTemplate2 = 'https://newsapi.org/v2/everything?q=' + query + '&apiKey=' + newsAPIKey + '&language=en&sortBy=publishedAt&pageSize=100';
 
-    fetch(urlTemplate2)
-        .then(response => response.json())
-        .then(data => {
-            const items = data.articles;
-            const resultDiv = document.getElementById("result");
+  fetch(urlTemplate2)
+    .then(response => response.json())
+    .then(data => {
+      const items = data.articles;
+      const resultDiv = document.getElementById("result");
 
-            if (items.length === 0) {
-                resultDiv.innerHTML += "<p>No Results from Google news sources</p>";
-                return;
-            }
+      if (items.length === 0) {
+        resultDiv.innerHTML += "<p>No Results from Google news sources</p>";
+        return;
+      }
 
-            let resultHtml = "<p>Search results from Google news sources</p><ul>";
-            // Display search results
-            items.forEach(item => {
-                resultHtml += `<li><a href="${item.url}" target="_blank">${item.title}</a></li>`;
-                fetch(item.url)
-                .then(response => response.text())
-                .then(html => {
-                  //Process article content with NLP
-                  const articletext= new DOMParser().parseFromString(html, "text/html").documentElement.textContent;
-                  const tokenizer = new natural.WordTokenizer();
-                  const tokens = tokenizer.tokenize(articletext);
-                  console.log(tokens);
-                })
-                .catch(error => {
-                    console.log(error);
-                    console.log("Google link broken");
-                });
-            });
+      let resultHtml = "<p>Search results from Google news sources</p><ul>";
+      // Display search results
+      items.forEach(item => {
+        resultHtml += `<li><a href="${item.url}" target="_blank">${item.title}</a></li>`;
+        fetch(item.url)
+          .then(response => response.text())
+          .then(html => {
+            //Process article content with NLP
+            const articletext = new DOMParser().parseFromString(html, "text/html").documentElement.textContent;
+            const tokenizer = new natural.WordTokenizer();
+            const tokens = tokenizer.tokenize(articletext);
+            console.log(tokens);
+          })
+          .catch(error => {
+            console.log(error);
+            console.log("Google link broken");
+          });
+      });
 
-            resultHtml += "</ul>";
-            resultDiv.innerHTML = resultHtml;
-        })
-        .catch(error => {
-            console.log("No results from Google news sources");
-        });
+      resultHtml += "</ul>";
+      resultDiv.innerHTML = resultHtml;
+    })
+    .catch(error => {
+      console.log("No results from Google news sources");
+    });
+}
+
+
+// Load the model
+async function loadModel() {
+  const model = await tf.loadLayersModel('model/model.json');
+  console.log('Model loaded.');
+
+  // Preprocess the data
+  const inputData = "Trump";
+
+  // Make predictions
+  const predictions = model.predict(inputData).array();
+
+  // Display the predictions
+  console.log(predictions);
 }
 
 

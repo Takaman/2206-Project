@@ -19,6 +19,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "@tensorflow/tfjs": "^4.2.0",
     "browserify-fs": "^1.0.0",
     "fs": "^0.0.1-security",
     "natural": "^6.2.0",
