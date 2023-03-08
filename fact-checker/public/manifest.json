@@ -17,6 +17,7 @@
     "default_popup": "popup.html"
   },
   "permissions": [
+    "http://127.0.0.1:8000/",
     "storage",
     "activeTab",
     "tabs",

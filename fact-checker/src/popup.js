@@ -1,3 +1,5 @@
+const { NlpManager } = require('nlpjs');
+
 
 //keywords might need to built more as fact checking websites have different ways of rating. Like four pinnochios means fake etc
 //Define keywords for false or misleading claims. Tried my best to include all the keywords
@@ -7,21 +9,6 @@ const falseKeywords = ["false", "misleading", "inaccurate", "unsupported", "part
 // Define keywords for true or mostly true claims
 const trueKeywords = ["true", "mostly true", "correct", "accurate", "supported", "partly true", "partly accurate", "verifiable"];
 let rssEntries = [];
-
-//Define our RSS feeds
-const rssFeeds = [
-  "https://www.rfa.org/english/RSS",
-  "https://thediplomat.com/feed",
-  "https://e27.co/index_wp.php/feed/",
-  "https://www.asianscientist.com/feed/?x=1",
-  "http://www.asianage.com/rss_feed/",
-  "https://www.newmandala.org/feed/",
-  "https://www.asiasentinel.com/feed/",
-  "https://asia.nikkei.com/rss/feed/nar",
-  "http://www.scmp.com/rss/91/feed",
-  "https://www.channelnewsasia.com/rssfeeds/8395986",
-  "https://asean.org/feed/",
-];
 
 
 // Function to label the rating as true, false or neutral
@@ -53,23 +40,31 @@ function getCurrentUrl(callback) {
 
 
 // Handle the form submission
-function handleFormSubmit(event) {
+async function handleFormSubmit(event) {
   let selectedText = "";
 
   console.log("Form submitted");
   event.preventDefault();
   //Send message to content script to get the selected text
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, { action: "getSelection", allFrames: true }, function (response) {
+    chrome.tabs.sendMessage(tabs[0].id, { action: "getSelection", allFrames: true }, async function (response) {
       selectedText = response.selection;
   
     // Get the selected text from the form
     // Encode the query for use in the URL
     console.log(selectedText);
-    const query = encodeURIComponent(selectedText);
+    // const parsedText = sendQuery(selectedText);
+    // console.log(parsedText);
+    
+    const parsedText = await sendQuery(selectedText);
+    console.log(parsedText.entity_string);
+
+    const query = encodeURIComponent(parsedText.entity_string);
     // Define the API key and URL put in the API key and the query
     const apiKey = "AIzaSyAvMF2h0dGexw34zHgDz3rWob2FTYAC8tE";
     const urlTemplate = `https://factchecktools.googleapis.com/v1alpha1/claims:search?query=${query}&key=${apiKey}`;
+    
+      
 
     // Send a request to the Google Fact Check API
     fetch(urlTemplate)
@@ -126,6 +121,7 @@ function handleFormSubmit(event) {
       .catch(error => {
 
         console.log("API does not have any data. Trying Other methods. Searching of Google")
+        
         searchNewsAPI(selectedText);
       });
   });
@@ -133,6 +129,69 @@ function handleFormSubmit(event) {
 
 
 }
+
+function analyzeText(text)
+{
+  const csrfToken = getCookie('csrftoken');
+  return fetch("http://127.0.0.1:8000/analyze/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrfToken,
+    },
+    body: JSON.stringify({text: text}),
+  })
+  .then((response) => response.json())
+  .then((result) => {
+    
+    return result["compound"];
+  })
+  .catch((error) => {
+    console.log("error", error);
+    return null;
+  });
+}
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      // Does this cookie string begin with the name we want?
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+function sendQuery(query)
+{
+  const csrfToken = getCookie('csrftoken');
+  return fetch("http://127.0.0.1:8000/extract/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrfToken,
+    },
+    body: JSON.stringify({query: query}),
+  })
+  .then((response) => response.json())
+  .then((result) => {
+    console.log(result); 
+    return result;
+  })
+  .catch((error) => {
+    console.log("error", error);
+    return null;
+  });
+}
+
+
+
 
 function searchNewsAPI(query) {
     const newsAPIKey = "307ec301188c402080a825919ece8621";
@@ -143,7 +202,7 @@ function searchNewsAPI(query) {
         .then(data => {
             const items = data.articles;
             const resultDiv = document.getElementById("result");
-
+            
             if (items.length === 0) {
                 resultDiv.innerHTML += "<p>No Results from Google news sources</p>";
                 return;
@@ -158,9 +217,12 @@ function searchNewsAPI(query) {
                 .then(html => {
                   //Process article content with NLP
                   const articletext= new DOMParser().parseFromString(html, "text/html").documentElement.textContent;
-                  const tokenizer = new natural.WordTokenizer();
-                  const tokens = tokenizer.tokenize(articletext);
-                  console.log(tokens);
+                  analyzeText(articletext).then((sentiment) => {
+                    if (sentiment !== null) {
+                      const sentimentLabel = sentiment > 0 ? "Positive" : sentiment < 0 ? "Negative" : "Neutral";
+                      resultDiv.innerHTML += `<p>${item.title} (${sentimentLabel})</p>`;
+                    }
+                  });
                 })
                 .catch(error => {
                     console.log(error);
