@@ -122,7 +122,9 @@ e.g `tensorflow-deps==2.10.0,tensorflow-macos==2.10.0`
   conda install -c apple tensorflow-deps
   pip install --force-reinstall -v "tensorflow-macos==2.10.0"
   pip install --force-reinstall -v "tensorflow-metal==0.6.0"
-  pip install -U scikit-learn scipy matplotlib pandas
+  pip install --force-reinstall -v "tensorflow-decision-forests==1.0.1"
+  pip install --no-deps tensorflowjs
+  pip install -U scikit-learn scipy matplotlib pandas tensorflow_hub jax scipy jaxlib etils
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -142,7 +144,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the MIT License. See `LICENSE.md` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

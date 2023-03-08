@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<<<<<<< HEAD
   <head>
     <meta charset="UTF-8" />
     <title>Fact Checker Extension</title>
@@ -20,3 +21,29 @@
     </div>
   </body>
 </html>
+=======
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.12.0; style-src 'self' 'unsafe-inline';">
+  <title>Fact Checker Extension</title>
+  <script src="FactChecker.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.12.0"></script>
+</head>
+
+<body>
+  <div>
+    <h2>Fact Checker Extension</h2>
+    <p>Click the button to fact check!</p>
+    <form id="check_tweet_button">
+      <button type="submit">Check Tweet</button>
+    </form>
+    <div id="result"></div>
+  </div>
+
+  <button onclick="loadModel()">Load Model</button>
+</body>
+
+</html>
+>>>>>>> 7082843 (Added ModelConvert and Modified FactChecker)
