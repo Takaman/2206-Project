@@ -2,7 +2,9 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from nltk.sentiment import SentimentIntensityAnalyzer
 import json
+import nltk
 import spacy
+from nltk.tokenize import word_tokenize
 
 nlp = spacy.load("en_core_web_sm")
 
@@ -10,17 +12,15 @@ def extract(request):
     if request.method == 'POST':
         query = json.loads(request.body)['query']
         doc = nlp(query)
-        entities = []
-        for ent in doc.ents:
-            entities.append({
-                'text': ent.text,
-                'label': ent.label_
-            })
-        
-        entity_string = ', '.join([ent['text'] for ent in entities])
-        return JsonResponse(entity_string, safe=False)
+        tokens = []
+        for token in doc:
+            # exclude stopwords and punctuations
+            if not token.is_stop and not token.is_punct:
+                tokens.append(token.lemma_)
+        return JsonResponse(' '.join(tokens), safe=False)
     else:
         return JsonResponse({'error': 'Invalid request method'})
+
 
 
 def analyze(request):
