@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Fact Checker",
     "version": "1.0",
-  
+    "content_security_policy": "script-src 'self' https://cdn.jsdelivr.net; object-src 'self'",
     "description": "An extension to verify the statement on social media sites",
     "icons": {
       "16": "icons/icon16.png",
@@ -13,9 +13,17 @@
   
     "permissions": [
       "activeTab",
-      "https://factchecktools.googleapis.com/*"
+      "tabs",
+      "scripting",
+      "https://factchecktools.googleapis.com/*",
+      "https://newsapi.org/v2/*"
     ],
-  
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["contentscript.js"]
+      }
+    ],
     "browser_action": {
         "default_popup": "popup.html",
         "default_icon": {
