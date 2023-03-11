@@ -16,7 +16,7 @@ from tensorflow.keras.layers import Dense, Embedding, LSTM
 from pathlib import Path
 
 # Create a Path object for the directory containing the datasets
-data_dir = Path('datasets')
+data_dir = Path('../datasets')
 
 # Load the fake news dataset
 fake_dataset = pd.read_csv(data_dir / 'Fake.csv')
