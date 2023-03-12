@@ -1,22 +1,21 @@
 import os
 import pandas as pd
+from pathlib import Path
 import tensorflow as tf
 import nltk
 nltk.download('stopwords')
 nltk.download('punkt')
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-#from keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.layers import Dense, Embedding, LSTM
-from pathlib import Path
 
-# Create a Path object for the directory containing the datasets
-data_dir = Path('../datasets')
+# Create a Path object for the directory containing the input file
+data_dir = Path("datasets/")
 
 # Load the fake news dataset
 fake_dataset = pd.read_csv(data_dir / 'Fake.csv')
@@ -68,8 +67,11 @@ if os.path.exists('FalseGuardian.h5'):
     model = tf.keras.models.load_model('FalseGuardian.h5')
 
     # Train model
-    model.fit(padded_sequences, labels, epochs=3,
+    model.fit(padded_sequences, labels, epochs=4,
               batch_size=32, validation_split=0.2)
+    
+    # Save the model
+    model.save('FalseGuardian.h5')
     
 else:
     # Define model architecture
@@ -82,11 +84,13 @@ else:
     model.compile(loss='binary_crossentropy',
                   optimizer='adam', metrics=['accuracy'])
     # Train model
-    model.fit(padded_sequences, labels, epochs=3,
+    model.fit(padded_sequences, labels, epochs=4,
               batch_size=32, validation_split=0.2)
+    
+    # Save the model
+    model.save('FalseGuardian.h5')
 
-# Save the model
-model.save('FalseGuardian.h5')
+
 
 # Evaluate the model
 loss, accuracy = model.evaluate(padded_sequences, labels)
