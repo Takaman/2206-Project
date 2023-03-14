@@ -53,13 +53,12 @@ async function handleFormSubmit(event) {
       // Get the selected text from the form
       // Encode the query for use in the URL
       console.log(selectedText);
-      // const parsedText = sendQuery(selectedText);
-      // console.log(parsedText);
 
       const parsedText = await sendQuery(selectedText);
-      console.log(parsedText.entity_string);
+      console.log(parsedText.tokens);
 
-      const query = encodeURIComponent(parsedText.entity_string);
+      const query = encodeURIComponent(parsedText.tokens);
+      console.log(query)
       // Define the API key and URL put in the API key and the query
       const apiKey = "AIzaSyAvMF2h0dGexw34zHgDz3rWob2FTYAC8tE";
       const urlTemplate = `https://factchecktools.googleapis.com/v1alpha1/claims:search?query=${query}&key=${apiKey}`;
@@ -74,8 +73,10 @@ async function handleFormSubmit(event) {
           let queryTrueCount = 0;
           let queryFalseCount = 0;
           let queryNeutralCount = 0;
-
+          
           // Loop through each fact check result
+          if (data && data.claims)
+          {
           for (let claim of data.claims) {
             const ratingText = claim.claimReview[0].textualRating;
 
@@ -90,6 +91,13 @@ async function handleFormSubmit(event) {
               queryNeutralCount++;
             }
           }
+        }
+        else{
+          console.error("No data found in Google fact check API")
+          console.log("API does not have any data. Trying Other methods. Searching of Google")
+
+          searchNewsAPI(selectedText);
+        }
 
           // Compute the weighted score for this query term
           const totalCount = queryTrueCount + queryFalseCount + queryNeutralCount;
@@ -117,9 +125,9 @@ async function handleFormSubmit(event) {
             resultDiv.innerHTML += "<p>This sentence or speech is likely true or mostly true</p>";
           }
         })
-        // If the API does not have any data, try searching Google for news articles
+        // If the API does not have any data, try searching using of NewsApi for news articles
         .catch(error => {
-
+          console.log(error)
           console.log("API does not have any data. Trying Other methods. Searching of Google")
 
           searchNewsAPI(selectedText);
@@ -148,6 +156,28 @@ function analyzeText(text) {
     .catch((error) => {
       console.log("error", error);
       return null;
+    });
+}
+
+
+function trainModel(articleText) {
+  const csrfToken = getCookie('csrftoken');
+  return fetch("http://127.0.0.1:8000/train/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrfToken,
+    },
+    body: JSON.stringify({ articleText: articleText }),
+  })
+    .then((response) => response.json())
+    .then((result) => {
+      console.log(result);
+      return result;
+      // Do something with the training result
+    })
+    .catch((error) => {
+      console.log("error", error);
     });
 }
 
@@ -189,11 +219,9 @@ function sendQuery(query) {
 }
 
 
-
-
 function searchNewsAPI(query) {
   const newsAPIKey = "307ec301188c402080a825919ece8621";
-  const urlTemplate2 = 'https://newsapi.org/v2/everything?q=' + query + '&apiKey=' + newsAPIKey + '&language=en&sortBy=publishedAt&pageSize=100';
+  const urlTemplate2 = 'https://newsapi.org/v2/everything?q=' + query + '&apiKey=' + newsAPIKey + '&language=en&sortBy=publishedAt&pageSize=100&summaryType=short';
 
   fetch(urlTemplate2)
     .then(response => response.json())
@@ -210,22 +238,22 @@ function searchNewsAPI(query) {
       // Display search results
       items.forEach(item => {
         resultHtml += `<li><a href="${item.url}" target="_blank">${item.title}</a></li>`;
-        fetch(item.url)
-          .then(response => response.text())
-          .then(html => {
-            //Process article content with NLP
-            const articletext = new DOMParser().parseFromString(html, "text/html").documentElement.textContent;
-            analyzeText(articletext).then((sentiment) => {
-              if (sentiment !== null) {
-                const sentimentLabel = sentiment > 0 ? "Positive" : sentiment < 0 ? "Negative" : "Neutral";
-                resultDiv.innerHTML += `<p>${item.title} (${sentimentLabel})</p>`;
-              }
-            });
+        const articletext = item.description;
+        console.log(articletext);
+
+        trainModel(articletext).then(result => {
+          console.log("Training result: ", result);
           })
           .catch(error => {
-            console.log(error);
-            console.log("Google link broken");
-          });
+            console.log("Error: ", error);
+        });
+
+        // analyzeText(articletext).then((sentiment) => {
+        //   if (sentiment !== null) {
+        //     const sentimentLabel = sentiment > 0 ? "Positive" : sentiment < 0 ? "Negative" : "Neutral";
+        //     resultDiv.innerHTML += `<p>${item.title} (${sentimentLabel})</p>`;
+        //   }
+        // });
       });
 
       resultHtml += "</ul>";
@@ -235,6 +263,7 @@ function searchNewsAPI(query) {
       console.log("No results from Google news sources");
     });
 }
+
 
 // Add event listener 
 document.addEventListener("DOMContentLoaded", function () {

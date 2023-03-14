@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('analyze/', views.analyze, name='analyze'),
     path('extract/', views.extract, name='extract'),
+    path('train/', views.train, name='train'),
 ]
