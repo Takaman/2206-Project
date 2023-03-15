@@ -114,11 +114,6 @@ def train(request):
             train_dataset=tokenized_dataset,        # training dataset  
         )
         trainer.train()
-
-        #Split datasets into train and validation set
-        train_dataset = tokenized_dataset["train"].shuffle(seed=42).select(range(1000))
-
-
         # Return a JSON response indicating success
         return JsonResponse({'success': True})
     else:
