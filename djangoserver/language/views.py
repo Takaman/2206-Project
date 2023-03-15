@@ -56,12 +56,26 @@ def extract_features(article_text):
 
 clf = DecisionTreeClassifier()
 vectorizer = TfidfVectorizer()
+article_texts = []
+
+def addArticleText(request):
+    global article_texts
+    if request.method == 'POST':
+        article_text = json.loads(request.body)['articleText']
+        article_texts.append(article_text)
+        log.info(article_texts)
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False})
+
+#Do this later
 def train(request):
 
     if request.method == 'POST':
         # Get the article texts from the POST request
-        
+
         article_texts = json.loads(request.body)['articleText']
+        article_text.append(article_texts)
         log.info(article_texts)
 
         # Vectorize the cleaned text strings using a TF-IDF vectorizer
