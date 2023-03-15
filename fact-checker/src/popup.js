@@ -159,8 +159,28 @@ function analyzeText(text) {
     });
 }
 
+function addToModel(articleText)
+{
+  const csrfToken = getCookie('csrftoken');
+  return fetch("http://127.0.0.1:8000/addArticleText/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrfToken,
+    },
+    body: JSON.stringify({ articleText: articleText }),
+    })
+    .then((response) => response.json())
+    .then((result) => {
+      console.log(result);
+      return result;
+    })
+    .catch((error) => {
+      console.log("error", error);
+    });
+}
 
-function trainModel(articleText) {
+function trainModel() {
   const csrfToken = getCookie('csrftoken');
   return fetch("http://127.0.0.1:8000/train/", {
     method: "POST",
@@ -168,7 +188,7 @@ function trainModel(articleText) {
       "Content-Type": "application/json",
       "X-CSRFToken": csrfToken,
     },
-    body: JSON.stringify({ articleText: articleText }),
+    body: JSON.stringify({}),
   })
     .then((response) => response.json())
     .then((result) => {
@@ -233,20 +253,22 @@ function searchNewsAPI(query) {
         resultDiv.innerHTML += "<p>No Results from Google news sources</p>";
         return;
       }
-
+      
       let resultHtml = "<p>Search results from Google news sources</p><ul>";
       // Display search results
       items.forEach(item => {
         resultHtml += `<li><a href="${item.url}" target="_blank">${item.title}</a></li>`;
         const articletext = item.description;
         console.log(articletext);
-
-        trainModel(articletext).then(result => {
+        
+        addToModel(articletext).then(result => {
           console.log("Training result: ", result);
           })
           .catch(error => {
             console.log("Error: ", error);
         });
+
+
 
         // analyzeText(articletext).then((sentiment) => {
         //   if (sentiment !== null) {
@@ -256,9 +278,17 @@ function searchNewsAPI(query) {
         // });
       });
 
+        })
+        .catch(error => {
+          console.log("Error: ", error);
+      });
+
+      trainModel().then(result => {
+        console.log("Training result: ", result);
+        
       resultHtml += "</ul>";
       resultDiv.innerHTML = resultHtml;
-    })
+      })
     .catch(error => {
       console.log("No results from Google news sources");
     });

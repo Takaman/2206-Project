@@ -7,6 +7,7 @@ import nltk
 import spacy
 import logging
 import tempfile
+from datasets import Dataset
 import numpy as np
 from nltk.tokenize import word_tokenize
 from sklearn.linear_model import LogisticRegression
@@ -19,12 +20,26 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.tree import DecisionTreeClassifier
 from nltk.corpus import stopwords
 from bs4 import BeautifulSoup
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments
+
+#Load tokenizer and model
+tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+model = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=2)
 
 nlp = spacy.load("en_core_web_sm")
 nltk.download('stopwords')
 
 log = logging.getLogger(__name__)
 stopwords = set(stopwords.words('english'))
+
+def clean_article_text(text):
+    #Remove HTML tags
+    soup = BeautifulSoup(text, 'html.parser')
+    text_no_html = soup.get_text()
+
+    #Remove special characters and escape sequences
+    text_cleaned = re.sub(r'[\n\r\t\xa0]', ' ', text_no_html)
+    return text_cleaned
 
 def extract(request):
     if request.method == 'POST':
@@ -62,9 +77,9 @@ def addArticleText(request):
     global article_texts
     if request.method == 'POST':
         article_text = json.loads(request.body)['articleText']
-        article_texts.append(article_text)
-        log.info(article_texts)
-        return JsonResponse({'success': True})
+        cleaned_article_text = clean_article_text(article_text)
+        article_texts.append(cleaned_article_text)
+        return JsonResponse({'Success in appending for more research': True})
     else:
         return JsonResponse({'success': False})
 
@@ -72,19 +87,36 @@ def addArticleText(request):
 def train(request):
 
     if request.method == 'POST':
-        # Get the article texts from the POST request
+        # Get the article text
+        log.info("Training model...")
+        log.info(article_texts)     
+        # Prepare dataset
+        dataset = Dataset.from_dict({"text": article_texts, "label": [1] * len(article_texts)})  # assuming all articles in the list are trustworthy
 
-        article_texts = json.loads(request.body)['articleText']
-        article_text.append(article_texts)
-        log.info(article_texts)
+        # Tokenize the dataset
+        def tokenize(batch):
+            return tokenizer(batch["text"], padding="max_length", truncation=True)
+        
+        tokenized_dataset = dataset.map(tokenize, batched=True)
 
-        # Vectorize the cleaned text strings using a TF-IDF vectorizer
+        # Fine tune the model
+        training_args = TrainingArguments(
+            output_dir="./results",          # output directory
+            num_train_epochs=1,              # total number of training epochs
+            per_device_train_batch_size=16,  # batch size per device during training
+            per_device_eval_batch_size=16,   # batch size for evaluation
+            logging_dir='./logs',            # directory for storing logs
+        )
 
-        X = vectorizer.fit_transform(article_texts)
+        trainer = Trainer(
+            model=model,                         # the instantiated 🤗 Transformers model to be trained
+            args=training_args,                  # training arguments, defined above
+            train_dataset=tokenized_dataset,        # training dataset  
+        )
+        trainer.train()
 
-        # Train a decision tree classifier on the vectorized texts
-        y = [1] * len(article_texts)  # Label all articles as true
-        clf.fit(X, y)
+        #Split datasets into train and validation set
+        train_dataset = tokenized_dataset["train"].shuffle(seed=42).select(range(1000))
 
 
         # Return a JSON response indicating success
@@ -93,38 +125,6 @@ def train(request):
         # Return a JSON response indicating failure
         return JsonResponse({'success': False})
     
-# def train(request):
-#     if request.method == 'POST':
-#         articles = json.loads(request.body)['articles']
-
-#         filename = "data.txt"
-
-#         # Write the extracted features and labels for each article to the file
-#         with open(filename, 'w') as f:
-#             for article in articles:
-#                 features = extract_features(article['text'])
-#                 label = article['label']
-#                 f.write(f"{label}\t{' '.join(features)}\n")
-#         # train the model
-
-#         # Load the data from the temporary file
-#         with open(f.name, 'r') as f:
-#             data = f.readlines()
-        
-#         # Split the data into features and labels
-#         labels = []
-#         features = []
-#         for line in data:
-#             label, text = line.strip().split('\t')
-#             labels.append(label)
-#             features.append(text)
-
-
-
-#         return JsonResponse({'success': 'Model trained successfully!'})
-#     else:
-#         return JsonResponse({'error': 'Invalid request method'})
-
 
 def analyze(request):
     if request.method == 'POST':

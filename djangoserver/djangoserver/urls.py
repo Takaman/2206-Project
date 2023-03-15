@@ -21,4 +21,5 @@ urlpatterns = [
     path('analyze/', views.analyze, name='analyze'),
     path('extract/', views.extract, name='extract'),
     path('train/', views.train, name='train'),
+    path('addArticleText/', views.addArticleText, name='addArticleText'),
 ]
