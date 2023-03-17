@@ -42,8 +42,11 @@ def process_fever_data(jsonl_file, wiki_data):
                     for evidence in evidence_group:
                         wiki_title = evidence[2]
                         sentence_id = evidence[3]
-                        evidence_sentence = wiki_data.get(wiki_title, "").split("\n")[sentence_id].strip()
-                        evidence_text += f" {evidence_sentence}"
+                        wiki_text = wiki_data.get(wiki_title, "")
+                        sentences = wiki_text.split("\n")
+                        if 0 <= sentence_id < len(sentences):
+                            evidence_sentence = sentences[sentence_id].strip()
+                            evidence_text += f" {evidence_sentence}"
                         
                 text = f"{claim} [SEP] {evidence_text}"
             else:
