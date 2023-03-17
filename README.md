@@ -44,6 +44,7 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 * [![Node.js][Node-logo]][Node-url]
 * [![npm][npm-logo]][npm-url]
 * [![Django][Django-logo]][Django-url]
+* [![PyTorch][PyTorch-logo]][PyTorch-url]
 * [![spaCy][spaCy-logo]][spaCy-url]
 * [![NLTK][NLTK-logo]][NLTK-url]
 * [![Hugging Face Transformers][Transformers-logo]][Transformers-url]
@@ -165,7 +166,7 @@ Distributed under the MIT License. See `LICENSE.md` for more information.
 [Bootstrap-url]: https://getbootstrap.com
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 [JQuery-url]: https://jquery.com 
-[Django-logo]: https://static.djangoproject.com/img/logos/django-logo-negative.png
+[Django-logo]: https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white
 [Django-url]: https://www.djangoproject.com/
 [spaCy-logo]: https://raw.githubusercontent.com/explosion/spaCy/master/website/static/img/logo.svg
 [spaCy-url]: https://spacy.io/
@@ -181,3 +182,5 @@ Distributed under the MIT License. See `LICENSE.md` for more information.
 [Node-url]: https://nodejs.org/
 [npm-logo]: https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white
 [npm-url]: https://www.npmjs.com/
+[PyTorch-url]: https://pytorch.org/
+[PyTorch-logo]: https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white
