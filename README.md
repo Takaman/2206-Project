@@ -173,11 +173,11 @@ Distributed under the MIT License. See `LICENSE.md` for more information.
 [NLTK-url]: https://www.nltk.org/
 [Transformers-logo]: https://huggingface.co/front/assets/huggingface_logo.svg
 [Transformers-url]: https://huggingface.co/transformers/
-[Python-logo]: https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1024px-Python-logo-notext.svg.png
+[Python-logo]: https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
 [Python-url]: https://www.python.org/
-[JavaScript-logo]: https://upload.wikimedia.org/wikipedia/commons/9/99/Unofficial_JavaScript_logo_2.svg
+[JavaScript-logo]: https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E
 [JavaScript-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript
-[Node-logo]: https://nodejs.org/static/images/logo.svg
+[Node-logo]: https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white
 [Node-url]: https://nodejs.org/
-[npm-logo]: https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Npm-logo.svg/800px-Npm-logo.svg.png
+[npm-logo]: https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white
 [npm-url]: https://www.npmjs.com/
