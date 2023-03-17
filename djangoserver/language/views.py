@@ -3,36 +3,32 @@ from django.http import JsonResponse
 from nltk.sentiment import SentimentIntensityAnalyzer
 import json
 import joblib
+import torch
 import re
+import os
 import nltk
 import spacy
 import logging
-import tempfile
 from datasets import Dataset
 import numpy as np
 from nltk.tokenize import word_tokenize
-from sklearn.linear_model import LogisticRegression
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics import accuracy_score
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.tree import DecisionTreeClassifier
 from nltk.corpus import stopwords
 from bs4 import BeautifulSoup
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
-
+from transformers import BartTokenizer, BartForConditionalGeneration
 from fact_checking import FactChecker
 
 #Load tokenizer and model
-# tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
-# model = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=2)
-tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-fact_checking_model = GPT2LMHeadModel.from_pretrained("fractalego/fact-checking")
-fact_checker = FactChecker(fact_checking_model, tokenizer)
+model_folder = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(model_folder, "finetuned_gpt2_fever", "checkpoint-30000")
 
+model = GPT2LMHeadModel.from_pretrained(model_path)
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+
+# Load the BART summarization model and tokenizer
+summarization_model = BartForConditionalGeneration.from_pretrained("facebook/bart-large-cnn")
+summarization_tokenizer = BartTokenizer.from_pretrained("facebook/bart-large-cnn")
 
 nlp = spacy.load("en_core_web_sm")
 nltk.download('stopwords')
@@ -98,54 +94,70 @@ def analyze(request):
         return JsonResponse(score)
     else:
         return JsonResponse({'error': 'Invalid request method'})
-    
+
+def summarize_text(text, max_length=600):
+    inputs = summarization_tokenizer.encode("summarize: " + text, return_tensors="pt", max_length=1024, truncation=True)
+    summary_ids = summarization_model.generate(inputs, max_length=max_length, num_beams=4, length_penalty=2.0, early_stopping=True)
+    summary = summarization_tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+    return summary
+
+def softmax(logits):
+    e_logits = np.exp(logits - np.max(logits))
+    return e_logits / e_logits.sum(axis=-1, keepdims=True)
+
+def generate_prediction(claim, combined_article_text):
+ 
+    input_text = claim + " [SEP] " + combined_article_text
+    input_tokens = tokenizer.encode(input_text, return_tensors="pt")
+
+    # Truncate input_tokens to fit within the model's maximum sequence length
+    max_length = model.config.n_positions
+    if len(input_tokens[0]) > max_length:
+        input_tokens = input_tokens[:, :max_length]
+
+    with torch.no_grad():
+        logits = model(input_tokens).logits
+    # Calculate the probabilities
+    probabilities = softmax(logits.numpy())
+
+    # Get the indices of the SUPPORTS and REFUTES tokens
+    supports_token_idx = tokenizer.encode("SUPPORTS")[0]
+    refutes_token_idx = tokenizer.encode("REFUTES")[0]
+
+    # Calculate the probabilities for SUPPORTS and REFUTES
+    supports_probability = probabilities[0, supports_token_idx]
+    refutes_probability = probabilities[0, refutes_token_idx]
+
+    return {"TRUE": supports_probability, "FALSE": refutes_probability}
+
+
+# def generate_prediction(claim, combined_article_text):
+#     input_text = f"Given the claim: \"{claim}\", and the following Evidence: \"{combined_article_text}\", does the evidence support or refute the claim? Answer: "
+#     input_tokens = tokenizer.encode(input_text, return_tensors="pt")
+
+#     # Truncate input_tokens to fit within the model's maximum sequence length
+#     max_length = model.config.n_positions
+#     if len(input_tokens[0]) > max_length:
+#         input_tokens = input_tokens[:, :max_length]
+
+#     output = model.generate(input_tokens, max_length=100, num_return_sequences=1)
+#     prediction = tokenizer.decode(output[0])
+
+#     # Extract the generated label from the prediction
+#     generated_label = prediction.split("Answer: ")[-1].strip()
+
+#     return generated_label
+
 
 def train(request):
+    combined_article_text = " ".join(article_texts)
+    combined_article_text = summarize_text(combined_article_text)
+    log.info(combined_article_text)
     if request.method == "POST":
-        claim = request.POST.get("query")
-        combined_article_text = " ".join(article_texts)
+        claim = json.loads(request.body)['query']
+        # claim = request.POST.get("query")
+        probabilities = generate_prediction(claim, combined_article_text)
 
-        probalistic_score = fact_checker.validate_with_replicas(combined_article_text, claim)
-
-        return JsonResponse({"Result": probalistic_score})
+        return JsonResponse({"Result": probabilities})
     else:
         return JsonResponse({"error": "Invalid request method"})
-
-
-
-# #Do this later
-# def train(request):
-
-#     if request.method == 'POST':
-#         # Get the article text
-#         log.info("Training model...")
-#         log.info(article_texts)     
-#         # Prepare dataset
-#         dataset = Dataset.from_dict({"text": article_texts, "label": [1] * len(article_texts)})  # assuming all articles in the list are trustworthy
-
-#         # Tokenize the dataset
-#         def tokenize(batch):
-#             return tokenizer(batch["text"], padding="max_length", truncation=True)
-        
-#         tokenized_dataset = dataset.map(tokenize, batched=True)
-
-#         # Fine tune the model
-#         training_args = TrainingArguments(
-#             output_dir="./results",          # output directory
-#             num_train_epochs=1,              # total number of training epochs
-#             per_device_train_batch_size=16,  # batch size per device during training
-#             per_device_eval_batch_size=16,   # batch size for evaluation
-#             logging_dir='./logs',            # directory for storing logs
-#         )
-
-#         trainer = Trainer(
-#             model=model,                         # the instantiated 🤗 Transformers model to be trained
-#             args=training_args,                  # training arguments, defined above
-#             train_dataset=tokenized_dataset,        # training dataset  
-#         )
-#         trainer.train()
-#         # Return a JSON response indicating success
-#         return JsonResponse({'success': True})
-#     else:
-#         # Return a JSON response indicating failure
-#         return JsonResponse({'success': False})
