@@ -180,7 +180,7 @@ function addToModel(articleText)
     });
 }
 
-function trainModel() {
+function trainModel(query) {
   const csrfToken = getCookie('csrftoken');
   return fetch("http://127.0.0.1:8000/train/", {
     method: "POST",
@@ -188,12 +188,13 @@ function trainModel() {
       "Content-Type": "application/json",
       "X-CSRFToken": csrfToken,
     },
-    body: JSON.stringify({}),
+    body: JSON.stringify({query: query}),
   })
     .then((response) => response.json())
     .then((result) => {
       console.log(result);
-      return result;
+      const resultString = JSON.stringify(result);
+      return resultString;
       // Do something with the training result
     })
     .catch((error) => {
@@ -271,10 +272,11 @@ function searchNewsAPI(query) {
       // Wait for all addToModel promises to resolve
       Promise.all(addToModelPromises).then(() => {
         // After all promises have resolved, call the trainModel function
-        trainModel().then(result => {
-          console.log("Training result: ", result);
+        trainModel(query).then(result => {
+          console.log("Training ", result);
 
           resultHtml += "</ul>";
+          resultHtml += "<p>Training results: " + result + "</p>";
           resultDiv.innerHTML = resultHtml;
         })
         .catch(error => {

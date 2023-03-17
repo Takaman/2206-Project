@@ -3,31 +3,63 @@ from datasets import load_dataset, Dataset
 from transformers import GPT2Tokenizer
 from transformers import GPT2ForSequenceClassification, Trainer, TrainingArguments
 import torch
+import glob
+import os
 from torch import nn
 from transformers import GPT2LMHeadModel, GPT2Config, Trainer, TrainingArguments
 
-def process_fever_data(file_path):
-    with open(file_path, "r", encoding="utf-8") as f:
-        lines = f.readlines()
 
+def extract_wiki_data(wiki_folder_path):
+    wiki_data = {}
+    
+    # Iterate through all the files in the wiki_folder_path
+    for file_name in os.listdir(wiki_folder_path):
+        file_path = os.path.join(wiki_folder_path, file_name)
+        
+        # Read the file and extract the necessary data
+        with open(file_path, "r", encoding="utf-8") as file:
+            for line in file:
+                line_data = json.loads(line)
+                page_id = line_data["id"]
+                text = line_data["text"]
+                wiki_data[page_id] = text
+                
+    return wiki_data
+
+def process_fever_data(jsonl_file, wiki_data):
     data = {"text": [], "label": []}
-    for line in lines:
-        item = json.loads(line.strip())
-        label = item["label"]
-        claim = item["claim"]
-        evidence = " ".join([f"[{ev[2]}]" for ev_group in item["evidence"] for ev in ev_group if ev[2] is not None])
-        if label == "SUPPORTS":
-            label_id = 0
-        elif label == "REFUTES":
-            label_id = 1
-        else:
-            label_id = 2
-        data["text"].append(f"{claim} {evidence}")
-        data["label"].append(label_id)
+    
+    with open(jsonl_file, "r") as file:
+        for line in file:
+            claim_data = json.loads(line)
+
+            claim = claim_data["claim"]
+            label = claim_data["label"]
+            
+            if label != "NOT ENOUGH INFO":
+                evidence_text = ""
+                for evidence_group in claim_data["evidence"]:
+                    for evidence in evidence_group:
+                        wiki_title = evidence[2]
+                        sentence_id = evidence[3]
+                        evidence_sentence = wiki_data.get(wiki_title, "").split("\n")[sentence_id].strip()
+                        evidence_text += f" {evidence_sentence}"
+                        
+                text = f"{claim} [SEP] {evidence_text}"
+            else:
+                text = claim
+                
+            data["text"].append(text)
+            data["label"].append(label)
+            
     return data
 
-train_data = process_fever_data("train.jsonl")
-val_data = process_fever_data("dev.jsonl")
+
+
+
+wiki_data = extract_wiki_data("wiki-pages")
+train_data = process_fever_data("train.jsonl", wiki_data)
+val_data = process_fever_data("dev.jsonl", wiki_data)
 
 train_dataset = Dataset.from_dict(train_data)
 val_dataset = Dataset.from_dict(val_data)
@@ -60,6 +92,7 @@ class GPT2ForTextClassification(GPT2LMHeadModel):
 
 config = GPT2Config.from_pretrained("gpt2", num_labels=3)
 model = GPT2ForTextClassification.from_pretrained("gpt2", config=config)
+model = model.to("cuda") #Moving model to GPU
 
 training_args = TrainingArguments(
     output_dir="gpt2_finetuned",

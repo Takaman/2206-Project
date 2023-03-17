@@ -22,14 +22,15 @@ from sklearn.tree import DecisionTreeClassifier
 from nltk.corpus import stopwords
 from bs4 import BeautifulSoup
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments
-from transformers import GP2LMHeadModel, GPT2Tokenizer
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
+
 from fact_checking import FactChecker
 
 #Load tokenizer and model
 # tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
 # model = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=2)
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-fact_checking_model = GP2LMHeadModel.from_pretrained("fractalego/fact-checking")
+fact_checking_model = GPT2LMHeadModel.from_pretrained("fractalego/fact-checking")
 fact_checker = FactChecker(fact_checking_model, tokenizer)
 
 
@@ -87,43 +88,6 @@ def addArticleText(request):
         return JsonResponse({'Success in appending for more research': True})
     else:
         return JsonResponse({'success': False})
-
-#Do this later
-def train(request):
-
-    if request.method == 'POST':
-        # Get the article text
-        log.info("Training model...")
-        log.info(article_texts)     
-        # Prepare dataset
-        dataset = Dataset.from_dict({"text": article_texts, "label": [1] * len(article_texts)})  # assuming all articles in the list are trustworthy
-
-        # Tokenize the dataset
-        def tokenize(batch):
-            return tokenizer(batch["text"], padding="max_length", truncation=True)
-        
-        tokenized_dataset = dataset.map(tokenize, batched=True)
-
-        # Fine tune the model
-        training_args = TrainingArguments(
-            output_dir="./results",          # output directory
-            num_train_epochs=1,              # total number of training epochs
-            per_device_train_batch_size=16,  # batch size per device during training
-            per_device_eval_batch_size=16,   # batch size for evaluation
-            logging_dir='./logs',            # directory for storing logs
-        )
-
-        trainer = Trainer(
-            model=model,                         # the instantiated 🤗 Transformers model to be trained
-            args=training_args,                  # training arguments, defined above
-            train_dataset=tokenized_dataset,        # training dataset  
-        )
-        trainer.train()
-        # Return a JSON response indicating success
-        return JsonResponse({'success': True})
-    else:
-        # Return a JSON response indicating failure
-        return JsonResponse({'success': False})
     
 
 def analyze(request):
@@ -136,8 +100,52 @@ def analyze(request):
         return JsonResponse({'error': 'Invalid request method'})
     
 
-def fact_check(request):
+def train(request):
     if request.method == "POST":
-        claim = request.POST.get("claim")
+        claim = request.POST.get("query")
+        combined_article_text = " ".join(article_texts)
 
-        is_claim_true = fact_checker.validate(article_texts, claim)
+        probalistic_score = fact_checker.validate_with_replicas(combined_article_text, claim)
+
+        return JsonResponse({"Result": probalistic_score})
+    else:
+        return JsonResponse({"error": "Invalid request method"})
+
+
+
+# #Do this later
+# def train(request):
+
+#     if request.method == 'POST':
+#         # Get the article text
+#         log.info("Training model...")
+#         log.info(article_texts)     
+#         # Prepare dataset
+#         dataset = Dataset.from_dict({"text": article_texts, "label": [1] * len(article_texts)})  # assuming all articles in the list are trustworthy
+
+#         # Tokenize the dataset
+#         def tokenize(batch):
+#             return tokenizer(batch["text"], padding="max_length", truncation=True)
+        
+#         tokenized_dataset = dataset.map(tokenize, batched=True)
+
+#         # Fine tune the model
+#         training_args = TrainingArguments(
+#             output_dir="./results",          # output directory
+#             num_train_epochs=1,              # total number of training epochs
+#             per_device_train_batch_size=16,  # batch size per device during training
+#             per_device_eval_batch_size=16,   # batch size for evaluation
+#             logging_dir='./logs',            # directory for storing logs
+#         )
+
+#         trainer = Trainer(
+#             model=model,                         # the instantiated 🤗 Transformers model to be trained
+#             args=training_args,                  # training arguments, defined above
+#             train_dataset=tokenized_dataset,        # training dataset  
+#         )
+#         trainer.train()
+#         # Return a JSON response indicating success
+#         return JsonResponse({'success': True})
+#     else:
+#         # Return a JSON response indicating failure
+#         return JsonResponse({'success': False})
