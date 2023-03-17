@@ -39,14 +39,14 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 ### Built With
 
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
+* [![Python][Python-logo]][Python-url]
+* [![JavaScript][JavaScript-logo]][JavaScript-url]
+* [![Node.js][Node-logo]][Node-url]
+* [![npm][npm-logo]][npm-url]
+* [![Django][Django-logo]][Django-url]
+* [![spaCy][spaCy-logo]][spaCy-url]
+* [![NLTK][NLTK-logo]][NLTK-url]
+* [![Hugging Face Transformers][Transformers-logo]][Transformers-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -72,6 +72,12 @@ This is an example of how to list things you need to use the software and how to
    ```sh
    git clone https://github.com/takamantan/2206-Project.git
    ```
+2. Install node.js Dependencies
+   ```sh
+   cd fact-checker
+   npm install
+   ```
+
 3. Install Python Dependencies
    ```sh
    cd 2206-Project/trainer
@@ -159,3 +165,19 @@ Distributed under the MIT License. See `LICENSE.md` for more information.
 [Bootstrap-url]: https://getbootstrap.com
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 [JQuery-url]: https://jquery.com 
+[Django-logo]: https://static.djangoproject.com/img/logos/django-logo-negative.png
+[Django-url]: https://www.djangoproject.com/
+[spaCy-logo]: https://raw.githubusercontent.com/explosion/spaCy/master/website/static/img/logo.svg
+[spaCy-url]: https://spacy.io/
+[NLTK-logo]: https://www.nltk.org/_static/nltk_logo.png
+[NLTK-url]: https://www.nltk.org/
+[Transformers-logo]: https://huggingface.co/front/assets/huggingface_logo.svg
+[Transformers-url]: https://huggingface.co/transformers/
+[Python-logo]: https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1024px-Python-logo-notext.svg.png
+[Python-url]: https://www.python.org/
+[JavaScript-logo]: https://upload.wikimedia.org/wikipedia/commons/9/99/Unofficial_JavaScript_logo_2.svg
+[JavaScript-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript
+[Node-logo]: https://nodejs.org/static/images/logo.svg
+[Node-url]: https://nodejs.org/
+[npm-logo]: https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Npm-logo.svg/800px-Npm-logo.svg.png
+[npm-url]: https://www.npmjs.com/

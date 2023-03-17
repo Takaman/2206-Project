@@ -3,7 +3,6 @@ from django.http import JsonResponse
 from nltk.sentiment import SentimentIntensityAnalyzer
 import json
 import torch
-import torch
 import re
 import os
 import os
