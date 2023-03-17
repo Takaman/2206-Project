@@ -4,7 +4,9 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 import json
 import joblib
 import torch
+import torch
 import re
+import os
 import os
 import nltk
 import spacy
@@ -17,7 +19,6 @@ from bs4 import BeautifulSoup
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 from transformers import BartTokenizer, BartForConditionalGeneration
-from transformers import BartTokenizer, BartForConditionalGeneration
 from fact_checking import FactChecker
 
 #Load tokenizer and model
@@ -25,15 +26,8 @@ model_folder = os.path.dirname(os.path.abspath(__file__))
 model_path = os.path.join(model_folder, "finetuned_gpt2_fever", "checkpoint-30000")
 
 model = GPT2LMHeadModel.from_pretrained(model_path)
-model_folder = os.path.dirname(os.path.abspath(__file__))
-model_path = os.path.join(model_folder, "finetuned_gpt2_fever", "checkpoint-30000")
-
-model = GPT2LMHeadModel.from_pretrained(model_path)
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
-# Load the BART summarization model and tokenizer
-summarization_model = BartForConditionalGeneration.from_pretrained("facebook/bart-large-cnn")
-summarization_tokenizer = BartTokenizer.from_pretrained("facebook/bart-large-cnn")
 # Load the BART summarization model and tokenizer
 summarization_model = BartForConditionalGeneration.from_pretrained("facebook/bart-large-cnn")
 summarization_tokenizer = BartTokenizer.from_pretrained("facebook/bart-large-cnn")
@@ -146,13 +140,7 @@ def train(request):
     combined_article_text = " ".join(article_texts)
     combined_article_text = summarize_text(combined_article_text)
     log.info(combined_article_text)
-    combined_article_text = " ".join(article_texts)
-    combined_article_text = summarize_text(combined_article_text)
-    log.info(combined_article_text)
     if request.method == "POST":
-        claim = json.loads(request.body)['query']
-        # claim = request.POST.get("query")
-        probabilities = generate_prediction(claim, combined_article_text)
         claim = json.loads(request.body)['query']
         # claim = request.POST.get("query")
         probabilities = generate_prediction(claim, combined_article_text)
