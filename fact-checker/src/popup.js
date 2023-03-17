@@ -111,7 +111,8 @@ async function handleFormSubmit(event) {
                                <p>Weighted score: ${queryWeightedScore}</p>`;
 
           if (totalCount < 3) {
-            resultDiv.innerHTML += "<p>Not enough results to make a determination</p>";
+            resultDiv.innerHTML += "<p>Not enough results to make a determination. Trying Google News</p>";
+            searchNewsAPI(selectedText);
             return;
           }
 

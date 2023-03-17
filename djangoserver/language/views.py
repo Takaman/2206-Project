@@ -113,7 +113,7 @@ def generate_prediction(claim, combined_article_text):
         input_tokens = input_tokens[:, :max_length]
 
     # Generate the output
-    output = model.generate(input_tokens, max_length=500, num_return_sequences=1)
+    output = model.generate(input_tokens, max_length=150, num_return_sequences=1)
     prediction = tokenizer.decode(output[0])
 
     # Extract the label from the generated output
