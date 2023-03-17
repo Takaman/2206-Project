@@ -127,7 +127,6 @@ async function handleFormSubmit(event) {
         })
         // If the API does not have any data, try searching using of NewsApi for news articles
         .catch(error => {
-          console.log(error)
           console.log("API does not have any data. Trying Other methods. Searching of Google")
 
           searchNewsAPI(selectedText);
@@ -255,13 +254,13 @@ function searchNewsAPI(query) {
         return;
       }
       
-      let resultHtml = "<p>Search results from Google news sources</p><ul>";
+      let resultHtml = "<p>Predictions from Google news sources</p><ul>";
 
       // Create an array to store addToModel promises
       let addToModelPromises = [];
 
       items.forEach(item => {
-        resultHtml += `<li><a href="${item.url}" target="_blank">${item.title}</a></li>`;
+        //resultHtml += `<li><a href="${item.url}" target="_blank">${item.title}</a></li>`;
         const articletext = item.description;
         console.log(articletext);
         
@@ -271,12 +270,13 @@ function searchNewsAPI(query) {
 
       // Wait for all addToModel promises to resolve
       Promise.all(addToModelPromises).then(() => {
+        console.log("Query is:", query);
         // After all promises have resolved, call the trainModel function
         trainModel(query).then(result => {
           console.log("Training ", result);
 
           resultHtml += "</ul>";
-          resultHtml += "<p>Training results: " + result + "</p>";
+          resultHtml += "<p>Prediction: " + result + "</p>";
           resultDiv.innerHTML = resultHtml;
         })
         .catch(error => {
@@ -289,7 +289,7 @@ function searchNewsAPI(query) {
 
     })
     .catch(error => {
-      console.log("Error fetching Google news API ", error);
+      console.log("Error fetching Google news API. No News Found ", error);
     });
 }
 
