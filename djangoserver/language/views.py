@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from nltk.sentiment import SentimentIntensityAnalyzer
 import json
-import joblib
 import torch
 import torch
 import re
@@ -24,11 +23,11 @@ from fact_checking import FactChecker
 #Load tokenizer and model
 model_folder = os.path.dirname(os.path.abspath(__file__))
 model_path = os.path.join(model_folder, "finetuned_gpt2_fever", "checkpoint-30000")
-
 model = GPT2LMHeadModel.from_pretrained(model_path)
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
 # Load the BART summarization model and tokenizer
+# This model is used to summarize the article text before passing it to the model
 summarization_model = BartForConditionalGeneration.from_pretrained("facebook/bart-large-cnn")
 summarization_tokenizer = BartTokenizer.from_pretrained("facebook/bart-large-cnn")
 

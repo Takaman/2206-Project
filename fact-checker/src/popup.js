@@ -296,7 +296,7 @@ function searchNewsAPI(query) {
 
 // Add event listener 
 document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("check_tweet_button");
+  const form = document.getElementById("check_fact");
   form.addEventListener("submit", handleFormSubmit);
   var b = document.getElementById('LoadModel');
   b.addEventListener('onclick', myFunction, false);
@@ -309,10 +309,3 @@ async function myFunction() {
   const predictions = model.predict(inputData).array();
   console.log(predictions);
 }
-
-        // analyzeText(articletext).then((sentiment) => {
-        //   if (sentiment !== null) {
-        //     const sentimentLabel = sentiment > 0 ? "Positive" : sentiment < 0 ? "Negative" : "Neutral";
-        //     resultDiv.innerHTML += `<p>${item.title} (${sentimentLabel})</p>`;
-        //   }
-        // });
