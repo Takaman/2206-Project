@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from nltk.sentiment import SentimentIntensityAnalyzer
 import json
 import joblib
+import re
 import nltk
 import spacy
 import logging
@@ -21,10 +22,16 @@ from sklearn.tree import DecisionTreeClassifier
 from nltk.corpus import stopwords
 from bs4 import BeautifulSoup
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments
+from transformers import GP2LMHeadModel, GPT2Tokenizer
+from fact_checking import FactChecker
 
 #Load tokenizer and model
-tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
-model = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=2)
+# tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+# model = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=2)
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+fact_checking_model = GP2LMHeadModel.from_pretrained("fractalego/fact-checking")
+fact_checker = FactChecker(fact_checking_model, tokenizer)
+
 
 nlp = spacy.load("en_core_web_sm")
 nltk.download('stopwords')
@@ -69,8 +76,6 @@ def extract_features(article_text):
     return " ".join(clean_tokens)
 
 
-clf = DecisionTreeClassifier()
-vectorizer = TfidfVectorizer()
 article_texts = []
 
 def addArticleText(request):
@@ -129,3 +134,10 @@ def analyze(request):
         return JsonResponse(score)
     else:
         return JsonResponse({'error': 'Invalid request method'})
+    
+
+def fact_check(request):
+    if request.method == "POST":
+        claim = request.POST.get("claim")
+
+        is_claim_true = fact_checker.validate(article_texts, claim)

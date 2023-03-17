@@ -255,42 +255,39 @@ function searchNewsAPI(query) {
       }
       
       let resultHtml = "<p>Search results from Google news sources</p><ul>";
-      // Display search results
+
+      // Create an array to store addToModel promises
+      let addToModelPromises = [];
+
       items.forEach(item => {
         resultHtml += `<li><a href="${item.url}" target="_blank">${item.title}</a></li>`;
         const articletext = item.description;
         console.log(articletext);
         
-        addToModel(articletext).then(result => {
-          console.log("Training result: ", result);
-          })
-          .catch(error => {
-            console.log("Error: ", error);
-        });
-
-
-
-        // analyzeText(articletext).then((sentiment) => {
-        //   if (sentiment !== null) {
-        //     const sentimentLabel = sentiment > 0 ? "Positive" : sentiment < 0 ? "Negative" : "Neutral";
-        //     resultDiv.innerHTML += `<p>${item.title} (${sentimentLabel})</p>`;
-        //   }
-        // });
+        // Push the addToModel promise into the array
+        addToModelPromises.push(addToModel(articletext));
       });
 
+      // Wait for all addToModel promises to resolve
+      Promise.all(addToModelPromises).then(() => {
+        // After all promises have resolved, call the trainModel function
+        trainModel().then(result => {
+          console.log("Training result: ", result);
+
+          resultHtml += "</ul>";
+          resultDiv.innerHTML = resultHtml;
         })
         .catch(error => {
           console.log("Error: ", error);
+        });
+      })
+      .catch(error => {
+        console.log("Error: ", error);
       });
 
-      trainModel().then(result => {
-        console.log("Training result: ", result);
-        
-      resultHtml += "</ul>";
-      resultDiv.innerHTML = resultHtml;
-      })
+    })
     .catch(error => {
-      console.log("No results from Google news sources");
+      console.log("Error fetching Google news API ", error);
     });
 }
 
@@ -310,3 +307,10 @@ async function myFunction() {
   const predictions = model.predict(inputData).array();
   console.log(predictions);
 }
+
+        // analyzeText(articletext).then((sentiment) => {
+        //   if (sentiment !== null) {
+        //     const sentimentLabel = sentiment > 0 ? "Positive" : sentiment < 0 ? "Negative" : "Neutral";
+        //     resultDiv.innerHTML += `<p>${item.title} (${sentimentLabel})</p>`;
+        //   }
+        // });
