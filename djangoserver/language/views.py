@@ -103,13 +103,9 @@ def summarize_text(text, max_length=600):
     summary = summarization_tokenizer.decode(summary_ids[0], skip_special_tokens=True)
     return summary
 
-def softmax(logits):
-    e_logits = np.exp(logits - np.max(logits))
-    return e_logits / e_logits.sum(axis=-1, keepdims=True)
-
 def generate_prediction(claim, combined_article_text):
  
-    input_text = claim + " [SEP] " + combined_article_text
+    input_text = "Claim: "+ claim + " [SEP] " +"Evidence: "+ combined_article_text + " [SEP] " + "Label:"
     input_tokens = tokenizer.encode(input_text, return_tensors="pt")
 
     # Truncate input_tokens to fit within the model's maximum sequence length
@@ -118,17 +114,18 @@ def generate_prediction(claim, combined_article_text):
         input_tokens = input_tokens[:, :max_length]
 
     # Generate the output
-    output = model.generate(input_tokens, max_length=100, num_return_sequences=1)
+    output = model.generate(input_tokens, max_length=500, num_return_sequences=1)
     prediction = tokenizer.decode(output[0])
 
     # Extract the label from the generated output
+    log.info("Prediction:" + prediction)
     label = prediction.split("Label:")[-1].strip()
 
     log.info(label)
 
-    if "SUPPOR" in label:
+    if "SUPPORTS" in prediction:
         answer = "TRUE"
-    elif "REFUTES" in label:
+    elif "REFUTES" in prediction:
         answer = "FALSE"
     else:
         answer = "NOT ENOUGH INFO"
