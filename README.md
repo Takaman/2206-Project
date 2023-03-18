@@ -24,7 +24,7 @@
   
 ![image](https://user-images.githubusercontent.com/91510432/226091643-2e4fc2a1-7bdb-463b-9479-8de2372c3c38.png)
 
-FalseGuardian fact checker extension checks your selected text for integrity and truthfulness. 
+FalseGuardian fact checker extension is a tool designed to promote integrity and truthfulness in online content. By simply selecting text on a webpage, users can quickly and easily check the veracity of the information presented. The extension employs advanced algorithms to analyze the selected text and provide users with relevant fact-checking information from trusted sources.
   
 </div>
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -45,11 +45,18 @@ FalseGuardian fact checker extension checks your selected text for integrity and
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<!-- Project Demo Video -->
+## Project Demo
+<div align="center">
+  
+[![Project False Guardian](https://img.youtube.com/vi/TsbB8SxtBiY/0.jpg)](https://www.youtube.com/watch?v=TsbB8SxtBiY)
+
+</div>
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
 To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
