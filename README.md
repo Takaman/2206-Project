@@ -103,7 +103,8 @@ This is an example of how to list things you need to use the software and how to
 
 7. Select text to fact check
 ```
-
+![image](https://user-images.githubusercontent.com/91510432/226081051-62e905c3-9f15-4ba3-b398-5abba3e59afd.png)
+The results would appear at the popup extension
 ```
 
 
