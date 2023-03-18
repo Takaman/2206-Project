@@ -104,6 +104,7 @@ This is an example of how to list things you need to use the software and how to
    -   Select the folder
 
 6. Select text to fact check
+
 First-layer approach
 ![image](https://user-images.githubusercontent.com/91510432/226145907-717263bb-11b9-44fe-b8c4-e5a8ef69c9ec.png)
 
