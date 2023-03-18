@@ -71,20 +71,22 @@ This is an example of how to list things you need to use the software and how to
    ```sh
    git clone https://github.com/Takaman/2206-Project.git
    ```
-2. Install node.js and python Dependencies
+2. Activate VENV and python Dependencies
    ```sh
+   cd 2206-Project/djangoserver
+   source djangoENV/bin/activate
    pip install -r requirements.txt
-   cd FalseGuardian
-   npm install
+   python -m spacy download en_core_web_lg
+   python -m spacy download en_core_web_sm
    ```
 3. Run the local Django Server 
-   ```js
-   cd 2206-Project/djangoserver
+   ```sh
    python ./manage.py runserver
    ```
-4. Build the Chrome Extension
-   ```js
+4. Build Chrome Extension and install node.js modules
+   ```sh
    cd 2206-Project/FalseGuardian
+   npm install
    npm run build 
    or 
    npm run watch 
