@@ -29,9 +29,9 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![image](https://user-images.githubusercontent.com/91510432/226081244-a56a7827-54c7-45b2-bde9-41850a296809.png)
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `Takaman`, `2206-Project`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+The FalseGuardian fact checker tool checks your selected text for integrity and truthfulness
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
