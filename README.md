@@ -14,7 +14,7 @@
     <img src="images/logo-no-background.png" alt="Logo" width="400" height="250">
   </a>
 
-<h3 align="center">FalseGuardian - Chrome Extension for Fact Verification</h3>
+<h3 align="center">Chrome Extension for Fact Verification</h3>
 </div>
 
 
