@@ -11,16 +11,10 @@
 <br />
 <div align="center">
   <a href="https://github.com/Takaman/2206-Project">
-    <img src="images/logo-color.png" alt="Logo" width="300" height="300">
+    <img src="images/logo-no-background.png" alt="Logo" width="400" height="250">
   </a>
 
-<h3 align="center">FalseGuardian</h3>
-
-  <p align="center">
-    Fake News Detector
-    <br />
-    <br />
-  </p>
+<h3 align="center">FalseGuardian - Chrome Extension for Fact Verification</h3>
 </div>
 
 
@@ -30,7 +24,7 @@
   
 ![image](https://user-images.githubusercontent.com/91510432/226091643-2e4fc2a1-7bdb-463b-9479-8de2372c3c38.png)
 
-The FalseGuardian fact checker tool checks your selected text for integrity and truthfulness. 
+FalseGuardian fact checker extension checks your selected text for integrity and truthfulness. 
   
 </div>
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -98,15 +92,25 @@ This is an example of how to list things you need to use the software and how to
    
 5. Go to your Chrome Browser's Extension page and load unpacked package
 
-   Navigate to the newly create /build folder
+   -   Navigate to the newly create /build folder
    
-    Select the folder
+   -   Select the folder
 
 6. Select text to fact check
 ![image](https://user-images.githubusercontent.com/91510432/226081051-62e905c3-9f15-4ba3-b398-5abba3e59afd.png)
 The results would appear at the popup extension. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Contributors
+
+The involvement of these individuals was crucial for the creation of this project.
+
+-   [@Terence2389](https://github.com/Terence2389) - [2102389](2102389@sit.singaporetech.edu.sg) 
+-   [@Takaman](https://github.com/Takaman) - [2102420](2102420@sit.singaporetech.edu.sg)
+-   [@Virence1](https://github.com/virence1) - [2102991](2102991@sit.singaporetech.edu.sg) 
+-   [@Elsonnnn](https://github.com/Elsonnnn) - [2101234](2101234@sit.singaporetech.edu.sg)
+
 
 <!-- LICENSE -->
 ## License
