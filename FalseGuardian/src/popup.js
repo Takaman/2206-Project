@@ -107,7 +107,7 @@ async function handleFormSubmit(event) {
                                <p>Neutral: ${queryNeutralCount}</p>
                                <p>Weighted score: ${queryWeightedScore}</p>`;
 
-          if (totalCount < 3) {
+          if (totalCount == 0) {
             resultDiv.innerHTML += "<p>Not enough results to make a determination. Trying Google News. Please be patient!</p>";
             searchNewsAPI(selectedText);
             return;
@@ -115,12 +115,17 @@ async function handleFormSubmit(event) {
 
           if (queryWeightedScore < -0.5) {
             resultDiv.innerHTML += "<p>This sentence or speech is likely false</p>";
-          } else if (queryWeightedScore > -0.5 && queryWeightedScore < 0) {
+          } else if (queryWeightedScore >= -0.5 && queryWeightedScore < 0) {
             resultDiv.innerHTML += "<p>This sentence or speech has false or misleading claims</p>";
           } else if (queryWeightedScore > 0 && queryWeightedScore < 0.5) {
             resultDiv.innerHTML += "<p>This sentence or speech has some true and some false or misleading claims</p>";
-          } else {
+          } 
+          else if (queryWeightedScore > 0.5)
+          {
             resultDiv.innerHTML += "<p>This sentence or speech is likely true or mostly true</p>";
+          }
+          else {
+            resultDiv.innerHTML += "<p>This sentence or speech is inconclusive</p>";
           }
         })
         // If the API does not have any data, try searching using of NewsApi for news articles
