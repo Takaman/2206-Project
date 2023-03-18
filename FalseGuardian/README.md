@@ -1,4 +1,4 @@
-# <img src="public/icons/icon_48.png" width="45" align="left"> Fact Checker
+# <img src="public/icons/icon_48.png" width="45" align="left"> FalseGuardian
 
 My Chrome Extension
 

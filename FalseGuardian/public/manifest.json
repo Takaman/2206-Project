@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Fact Checker",
+  "name": "FalseGuardian",
   "version": "1.0",
   "description": "My Chrome Extension",
   "icons": {
@@ -13,18 +13,19 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_title": "Fact Checker",
+    "default_title": "FalseGuardian",
     "default_popup": "popup.html"
   },
   "permissions": [
-    "http://127.0.0.1:8000/",
     "storage",
     "activeTab",
     "tabs",
-    "scripting",
-    "https://factchecktools.googleapis.com/*",
-    "https://newsapi.org/v2/*"
+    "scripting"
   ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  
   "content_scripts": [
     {
       "matches": [
@@ -35,5 +36,10 @@
         "contentScript.js"
       ]
     }
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:8000/*",
+    "https://factchecktools.googleapis.com/*",
+    "https://newsapi.org/v2/*"
   ]
 }
