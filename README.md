@@ -78,16 +78,33 @@ This is an example of how to list things you need to use the software and how to
    cd fact-checker
    npm install
    ```
-
 3. Install Python Dependencies
    ```sh
    cd 2206-Project/trainer
    pip install -r requirements.txt
    ```
-4. Enter your API in `config.js`
+4. Replace your API keys in `config.js`
    ```js
    blabla
    ```
+5. Run the local Django Server 
+   ```js
+   cd 2206-Project/djangoserver
+   python ./manage.py runserver
+   ```
+6. Build the Chrome Extension
+   ```js
+   cd 2206-Project/FalseGuardian
+   npm run watch
+   ```
+   Go to your Chrome Browser's Extension page and load unpacked package
+   Navigate to the newly create /build folder
+   Select the folder
+
+7. Select text to fact check
+```
+
+```
 
 
 ### Installation on Mac
