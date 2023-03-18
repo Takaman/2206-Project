@@ -74,7 +74,11 @@ This is an example of how to list things you need to use the software and how to
 2. Activate VENV and python Dependencies
    ```sh
    cd 2206-Project/djangoserver
+   
+   # Either create a virtualenv or install dependencies directly
+   python -m venv djangoENV
    source djangoENV/bin/activate
+
    pip install -r requirements.txt
    python -m spacy download en_core_web_lg
    python -m spacy download en_core_web_sm
