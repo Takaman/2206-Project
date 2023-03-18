@@ -1,8 +1,5 @@
-const { NlpManager } = require('nlpjs');
-import * as tf from '@tensorflow/tfjs';
-
 //keywords might need to built more as fact checking websites have different ways of rating. Like four pinnochios means fake etc
-//Define keywords for false or misleading claims. Tried my best to include all the keywords
+//Define keywords for false or misleading claims. Tried my best to include all the keywords based on Google Fact Check API labelling
 const falseKeywords = ["false", "misleading", "inaccurate", "unsupported", "partly false", "partly inaccurate", "Four Pinocchios",
   "baseless", "fabricated", "deceptive", "incorrect", "unproven", "unsubstantiated", "unfounded", "untrue", "exaggerated"];
 
@@ -111,7 +108,7 @@ async function handleFormSubmit(event) {
                                <p>Weighted score: ${queryWeightedScore}</p>`;
 
           if (totalCount < 3) {
-            resultDiv.innerHTML += "<p>Not enough results to make a determination. Trying Google News</p>";
+            resultDiv.innerHTML += "<p>Not enough results to make a determination. Trying Google News. Please be patient!</p>";
             searchNewsAPI(selectedText);
             return;
           }
@@ -302,11 +299,3 @@ document.addEventListener("DOMContentLoaded", function () {
   var b = document.getElementById('LoadModel');
   b.addEventListener('onclick', myFunction, false);
 });
-
-async function myFunction() {
-  const model = await tf.loadLayersModel('../trainer/JSModelGuardian/model.json');
-  console.log('Model loaded.');
-  const inputData = "Trump";
-  const predictions = model.predict(inputData).array();
-  console.log(predictions);
-}

@@ -14,12 +14,10 @@ import numpy as np
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from bs4 import BeautifulSoup
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 from transformers import BartTokenizer, BartForConditionalGeneration
-from fact_checking import FactChecker
 
-#Load tokenizer and model
+#Load GPT=2 tokenizer and pretrained model
 model_folder = os.path.dirname(os.path.abspath(__file__))
 model_path = os.path.join(model_folder, "finetuned_gpt2_fever", "checkpoint-30000")
 model = GPT2LMHeadModel.from_pretrained(model_path)
@@ -30,12 +28,13 @@ tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 summarization_model = BartForConditionalGeneration.from_pretrained("facebook/bart-large-cnn")
 summarization_tokenizer = BartTokenizer.from_pretrained("facebook/bart-large-cnn")
 
+# Load the spaCy and NLTK libraries for text processing
 nlp = spacy.load("en_core_web_sm")
 nltk.download('stopwords')
-
 log = logging.getLogger(__name__)
 stopwords = set(stopwords.words('english'))
 
+# Define a function to clean article text by removing HTML tags and special characters
 def clean_article_text(text):
     #Remove HTML tags
     soup = BeautifulSoup(text, 'html.parser')
@@ -117,16 +116,19 @@ def generate_prediction(claim, combined_article_text):
 
     # Extract the label from the generated output
     log.info("Prediction:" + prediction)
-    label = prediction.split("Label:")[-1].strip()
+    label = prediction.split("Label:")[1].strip()
 
-    log.info(label)
+    # log.info("Label is:" + label)
 
-    if "SUPPORTS" in prediction:
+    if "SUPPORTS" in label:
+        log.info("LABEL IS:"+ label)
         answer = "TRUE"
-    elif "REFUTES" in prediction:
+    elif "REFUTES" in label:
+        log.info("LABEL IS:"+ label)
         answer = "FALSE"
     else:
         answer = "NOT ENOUGH INFO"
+
     return answer
 
 
@@ -140,7 +142,7 @@ def train(request):
         # claim = request.POST.get("query")
         probabilities = generate_prediction(claim, combined_article_text)
 
-
+        article_texts.clear()
         return JsonResponse({"Result": probabilities})
     else:
         return JsonResponse({"error": "Invalid request method"})
