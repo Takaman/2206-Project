@@ -26,10 +26,11 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
+<div align="center">
 ![image](https://user-images.githubusercontent.com/91510432/226091643-2e4fc2a1-7bdb-463b-9479-8de2372c3c38.png)
 
 The FalseGuardian fact checker tool checks your selected text for integrity and truthfulness. 
-
+</div>
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
