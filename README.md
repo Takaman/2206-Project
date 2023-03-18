@@ -11,15 +11,13 @@
 <br />
 <div align="center">
   <a href="https://github.com/Takaman/2206-Project">
-    <img src="images/logo.png" alt="Logo" width="300" height="300">
+    <img src="images/logo-color.png" alt="Logo" width="300" height="300">
   </a>
 
 <h3 align="center">FalseGuardian</h3>
 
   <p align="center">
     Fake News Detector
-    <br />
-    <a href="https://github.com/Takaman/2206-Project"><strong>Explore the docs »</strong></a>
     <br />
     <br />
   </p>
