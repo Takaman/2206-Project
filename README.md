@@ -11,15 +11,13 @@
 <br />
 <div align="center">
   <a href="https://github.com/Takaman/2206-Project">
-    <img src="images/logo.png" alt="Logo" width="300" height="300">
+    <img src="images/logo-color.png" alt="Logo" width="300" height="300">
   </a>
 
 <h3 align="center">FalseGuardian</h3>
 
   <p align="center">
     Fake News Detector
-    <br />
-    <a href="https://github.com/Takaman/2206-Project"><strong>Explore the docs »</strong></a>
     <br />
     <br />
   </p>
@@ -28,10 +26,13 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-![image](https://user-images.githubusercontent.com/91510432/226081291-d98efc8c-4523-47b4-bda5-223a491c16a9.png)
+<div align="center">
+  
+![image](https://user-images.githubusercontent.com/91510432/226091643-2e4fc2a1-7bdb-463b-9479-8de2372c3c38.png)
 
-The FalseGuardian fact checker tool checks your selected text for integrity and truthfulness
-
+The FalseGuardian fact checker tool checks your selected text for integrity and truthfulness. 
+  
+</div>
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -51,7 +52,6 @@ The FalseGuardian fact checker tool checks your selected text for integrity and 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-
 <!-- GETTING STARTED -->
 ## Getting Started
 
@@ -65,90 +65,42 @@ This is an example of how to list things you need to use the software and how to
   ```sh
   npm install npm@latest -g
   ```
-
-
-### Installation on Windows
+  
+### Installation and Usage on Windows and Mac
 1. Clone the repo
    ```sh
    git clone https://github.com/Takaman/2206-Project.git
    ```
-2. Install node.js Dependencies
+2. Install node.js and python Dependencies
    ```sh
-   cd fact-checker
+   pip install -r requirements.txt
+   cd FalseGuardian
    npm install
    ```
-3. Install Python Dependencies
-   ```sh
-   cd 2206-Project/trainer
-   pip install -r requirements.txt
-   ```
-4. Replace your API keys in `config.js`
-   ```js
-   blabla
-   ```
-   
-### Usage on Windows
-1. Run the local Django Server 
+3. Run the local Django Server 
    ```js
    cd 2206-Project/djangoserver
    python ./manage.py runserver
    ```
-2. Build the Chrome Extension
+4. Build the Chrome Extension
    ```js
    cd 2206-Project/FalseGuardian
-   npm run watch
+   npm run build 
+   or 
+   npm run watch 
    ```
    
-3. Go to your Chrome Browser's Extension page and load unpacked package
+5. Go to your Chrome Browser's Extension page and load unpacked package
 
    Navigate to the newly create /build folder
    
     Select the folder
 
-4. Select text to fact check
+6. Select text to fact check
 ![image](https://user-images.githubusercontent.com/91510432/226081051-62e905c3-9f15-4ba3-b398-5abba3e59afd.png)
 The results would appear at the popup extension. 
 
-
-
-### Installation on Mac
-1. Clone the repo
-```sh
-  git clone https://github.com/Takaman/2206-Project.git
-```
-   
-1. Activate Miniconda virtual environment for Mac M1 Devices
-```sh
-  cd 2206-Project
-  bash trainer/m1MiniConda.sh -b -p $HOME/miniconda
-  source ~/miniconda/bin/activate
-```
-
-2. Install Tensorflow Dependencies, Version Number must line up. 
-e.g `tensorflow-deps==2.10.0,tensorflow-macos==2.10.0`
-
-```sh
-  conda install -c apple tensorflow-deps
-  pip install --force-reinstall -v "tensorflow-macos==2.10.0"
-  pip install --force-reinstall -v "tensorflow-metal==0.6.0"
-  pip install --force-reinstall -v "tensorflow-decision-forests==1.0.1"
-  pip install --no-deps tensorflowjs
-  pip install -U scikit-learn scipy matplotlib pandas tensorflow_hub jax scipy jaxlib etils
-```
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 <!-- LICENSE -->
 ## License
