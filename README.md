@@ -104,7 +104,11 @@ This is an example of how to list things you need to use the software and how to
    -   Select the folder
 
 6. Select text to fact check
-![image](https://user-images.githubusercontent.com/91510432/226081051-62e905c3-9f15-4ba3-b398-5abba3e59afd.png)
+First-layer approach
+![image](https://user-images.githubusercontent.com/91510432/226145907-717263bb-11b9-44fe-b8c4-e5a8ef69c9ec.png)
+
+Second-layered approach
+![image](https://user-images.githubusercontent.com/91510432/226145842-9ec36f16-473a-4e68-800f-7921f877a291.png)
 The results would appear at the popup extension. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
