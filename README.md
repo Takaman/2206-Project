@@ -31,7 +31,7 @@ FalseGuardian fact checker extension is a tool designed to promote integrity and
 
 
 
-### Built With
+## Built With
 
 * [![Python][Python-logo]][Python-url]
 * [![JavaScript][JavaScript-logo]][JavaScript-url]
