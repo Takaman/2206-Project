@@ -141,11 +141,11 @@ Distributed under the MIT License. See `LICENSE.md` for more information.
 [JQuery-url]: https://jquery.com 
 [Django-logo]: https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white
 [Django-url]: https://www.djangoproject.com/
-[spaCy-logo]: https://img.shields.io/badge/spaCy-2ecc71
+[spaCy-logo]: https://img.shields.io/badge/spaCy-2ecc71?style=for-the-badge&logo=spacy&logoColor=white
 [spaCy-url]: https://spacy.io/
-[NLTK-logo]: https://img.shields.io/badge/NLTK-4c7a6a
+[NLTK-logo]: https://img.shields.io/badge/NLTK-4c7a6a?style=for-the-badge&logo=ntlk&logoColor=white
 [NLTK-url]: https://www.nltk.org/
-[Transformers-logo]: https://img.shields.io/badge/Transformers-9769ff
+[Transformers-logo]: https://img.shields.io/badge/Transformers-9769ff?style=for-the-badge&logo=transformers&logoColor=white
 [Transformers-url]: https://huggingface.co/transformers/
 [Python-logo]: https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
 [Python-url]: https://www.python.org/
