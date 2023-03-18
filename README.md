@@ -65,7 +65,7 @@ This is an example of how to list things you need to use the software and how to
    ```sh
    git clone https://github.com/Takaman/2206-Project.git
    ```
-2. Activate VENV and python Dependencies
+2. Activate VENV and install python Dependencies
    ```sh
    cd 2206-Project/djangoserver
    
