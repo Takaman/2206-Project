@@ -10,7 +10,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/takamantan/2206-Project">
+  <a href="https://github.com/Takaman/2206-Project">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -19,7 +19,7 @@
   <p align="center">
     Fake News Detector
     <br />
-    <a href="https://github.com/takamantan/2206-Project"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/Takaman/2206-Project"><strong>Explore the docs »</strong></a>
     <br />
     <br />
   </p>
@@ -31,7 +31,7 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `takamantan`, `2206-Project`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `Takaman`, `2206-Project`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -71,7 +71,7 @@ This is an example of how to list things you need to use the software and how to
 ### Installation on Windows
 1. Clone the repo
    ```sh
-   git clone https://github.com/takamantan/2206-Project.git
+   git clone https://github.com/Takaman/2206-Project.git
    ```
 2. Install node.js Dependencies
    ```sh
@@ -93,7 +93,7 @@ This is an example of how to list things you need to use the software and how to
 ### Installation on Mac
 1. Clone the repo
 ```sh
-  git clone https://github.com/takamantan/2206-Project.git
+  git clone https://github.com/Takaman/2206-Project.git
 ```
    
 1. Activate Miniconda virtual environment for Mac M1 Devices
@@ -139,16 +139,16 @@ Distributed under the MIT License. See `LICENSE.md` for more information.
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/takamantan/2206-Project.svg?style=for-the-badge
-[contributors-url]: https://github.com/takamantan/2206-Project/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/takamantan/2206-Project.svg?style=for-the-badge
-[forks-url]: https://github.com/takamantan/2206-Project/network/members
-[stars-shield]: https://img.shields.io/github/stars/takamantan/2206-Project.svg?style=for-the-badge
-[stars-url]: https://github.com/takamantan/2206-Project/stargazers
-[issues-shield]: https://img.shields.io/github/issues/takamantan/2206-Project.svg?style=for-the-badge
-[issues-url]: https://github.com/takamantan/2206-Project/issues
-[license-shield]: https://img.shields.io/github/license/takamantan/2206-Project.svg?style=for-the-badge
-[license-url]: https://github.com/takamantan/2206-Project/blob/master/LICENSE.md
+[contributors-shield]: https://img.shields.io/github/contributors/Takaman/2206-Project.svg?style=for-the-badge
+[contributors-url]: https://github.com/Takaman/2206-Project/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/Takaman/2206-Project.svg?style=for-the-badge
+[forks-url]: https://github.com/Takaman/2206-Project/network/members
+[stars-shield]: https://img.shields.io/github/stars/Takaman/2206-Project.svg?style=for-the-badge
+[stars-url]: https://github.com/Takaman/2206-Project/stargazers
+[issues-shield]: https://img.shields.io/github/issues/Takaman/2206-Project.svg?style=for-the-badge
+[issues-url]: https://github.com/Takaman/2206-Project/issues
+[license-shield]: https://img.shields.io/github/license/Takaman/2206-Project.svg?style=for-the-badge
+[license-url]: https://github.com/Takaman/2206-Project/blob/master/LICENSE.md
 [product-screenshot]: images/screenshot.png
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
