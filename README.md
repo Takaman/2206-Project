@@ -28,8 +28,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
-![image](https://user-images.githubusercontent.com/91510432/226081244-a56a7827-54c7-45b2-bde9-41850a296809.png)
+![image](https://user-images.githubusercontent.com/91510432/226081291-d98efc8c-4523-47b4-bda5-223a491c16a9.png)
 
 The FalseGuardian fact checker tool checks your selected text for integrity and truthfulness
 
