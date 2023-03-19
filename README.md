@@ -45,15 +45,6 @@ FalseGuardian fact checker extension is a tool designed to promote integrity and
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- Project Demo Video -->
-## Project Demo
-<div align="center">
-  
-[![Project False Guardian](https://img.youtube.com/vi/TsbB8SxtBiY/0.jpg)](https://www.youtube.com/watch?v=TsbB8SxtBiY)
-
-</div>
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- GETTING STARTED -->
 ## Getting Started
 
