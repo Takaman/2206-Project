@@ -1,6 +1,6 @@
 beautifulsoup4==4.11.2
 datasets==2.10.1
-Django==4.1.7
+Django==4.2.14
 nltk==3.8.1
 numpy==1.24.2
 spacy==3.5.1
